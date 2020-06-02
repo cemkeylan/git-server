@@ -75,6 +75,7 @@ ln -sf log.html index.html
     for file in refs/heads/*; do
         branch=${file##*/}
         mkdir -p "$STAGIT_DIR/raw/$repository/$branch"
-        git archive --format tar | (cd "$STAGIT_DIR/raw/$repository/$branch" || return 1 ; tar xf -)
+        git archive --format tar -- "$branch" |
+            (cd "$STAGIT_DIR/raw/$repository/$branch" || return 1 ; tar xf -)
     done
 }
