@@ -2,7 +2,11 @@
 # shellcheck source=./config.def
 
 # A post-receive hook to form stagit pages,
-# creating tarballs, reinitializing stagit-index
+# creating tarballs, reinitializing stagit-index.
+#
+# This script can be run for each repository, without
+# pushing, by going to the repository directory and
+# running 'hooks/post-receive'.
 
 # Parse the configuration file
 hooksdir=$(readlink -f "$0") hooksdir=${hooksdir%/*}
