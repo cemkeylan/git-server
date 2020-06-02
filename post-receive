@@ -1,0 +1,80 @@
+#!/bin/sh
+# shellcheck source=./config.def
+
+# A post-receive hook to form stagit pages,
+# creating tarballs, reinitializing stagit-index
+
+# Parse the configuration file
+hooksdir=$(readlink -f "$0") hooksdir=${hooksdir%/*}
+. "$hooksdir/config"
+
+# Store the repository name in a variable. We strip
+# the directory names and '.git' here.
+repository=${PWD##*/} repository=${repository%.git}
+repository_path=${PWD}
+
+# Push to mirrors if a 'mirrors' file exists on the
+# base directory.
+[ -f mirrors ] && while read -r mirror; do
+    git push --mirror "$mirror"
+done < mirrors
+
+# Generate files parsed by 'stagit'.
+[ -f owner ] || printf '%s\n' "$OWNER" > owner
+[ -f url   ] || {
+    repo=$(realpath .); repo=${repo##*/}
+    printf '%s\n' "$BASE_URL/$repo"    > url
+}
+
+# Create the stagit structure
+mkdir -p "$STAGIT_DIR/$repository"
+stagit-index "$REPO_DIR"/* > "$STAGIT_DIR/index.html"
+
+# Install style files
+[ "$CSS" ]     && install -Dm644 "$CSS"     "$STAGIT_DIR/style.css"
+[ "$LOGO" ]    && install -Dm644 "$LOGO"    "$STAGIT_DIR/logo.png"
+[ "$FAVICON" ] && install -Dm644 "$FAVICON" "$STAGIT_DIR/favicon.png"
+
+(
+cd "$STAGIT_DIR/$repository" || return 1
+
+# We create a cache to the .cache file so log creation
+# is faster on larger repositories.
+stagit -c .cache "$repository_path"
+
+for file in style.css logo.png favicon.png; do
+    [ -f "../$file" ] && ln -sf "../$file" "$file"
+done
+
+# Link index.html to log.html so users don't have to
+# type the whole file out.
+ln -sf log.html index.html
+)
+
+
+# Create archives and plain raw files
+[ "$ARCHIVE_ALL" = 1 ] || [ -f archive ] && {
+    mkdir -p "$STAGIT_DIR/archive/$repository"
+    for file in refs/heads/* refs/tags/*; do
+
+        # Skip tarball recreation for tags, but always recreate branches.
+        case "$file" in refs/heads/*) recreate=1 ;; *) unset recreate; esac
+        tag=${file#refs/*/}
+        tarball="$STAGIT_DIR/archive/$repository/$repository-$tag.tar.gz"
+        [ "$recreate" != 1 ] && [ -f "$tarball" ] && continue
+
+        git archive \
+            --format tar.gz \
+            --prefix "$repository-$tag" \
+            -o "$tarball" \
+            -- "$tag"
+    done
+}
+
+[ "$RAW_ALL" = 1 ] || [ -f raw ] && {
+    for file in refs/heads/*; do
+        branch=${file##*/}
+        mkdir -p "$STAGIT_DIR/raw/$repository/$branch"
+        git archive --format tar | (cd "$STAGIT_DIR/raw/$repository/$branch" || return 1 ; tar xf -)
+    done
+}
