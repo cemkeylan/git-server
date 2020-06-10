@@ -60,7 +60,7 @@ ln -sf log.html index.html
 # Create archives and plain raw files
 [ "$ARCHIVE_ALL" = 1 ] || [ -f archive ] && {
     mkdir -p "$STAGIT_DIR/archive/$repository"
-    for file in refs/heads/* refs/tags/*; do
+    for file in refs/heads/* $(git tag -l); do
 
         # Skip tarball recreation for tags, but always recreate branches.
         case "$file" in refs/heads/*) recreate=1 ;; *) unset recreate; esac

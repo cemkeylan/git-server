@@ -23,7 +23,7 @@ lsindex() {
      for file in *; do
          [ "$file" = index.html ] && continue
          [ -d "$file" ] && file="$file/"
-         printf '<li><a href="%s">&s</a></li>' "$file" "$file"
+         printf '<li><a href="%s">%s</a></li>' "$file" "$file"
      done
      printf '%s\n' "</ul></body></html"
  }
