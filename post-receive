@@ -11,6 +11,7 @@
 # Parse the configuration file
 hooksdir=$(readlink -f "$0") hooksdir=${hooksdir%/*}
 . "$hooksdir/config"
+. "$hooksdir/lib"
 
 # Store the repository name in a variable. We strip
 # the directory names and '.git' here.
@@ -73,6 +74,10 @@ ln -sf log.html index.html
             -o "$tarball" \
             -- "$tag"
     done
+    for dir in archive "archive/$repository"; do (
+        cd "$STAGIT_DIR/$dir"
+        lsindex "$STAGIT_DIR" > index.html
+    ) done
 }
 
 [ "$RAW_ALL" = 1 ] || [ -f raw ] && {

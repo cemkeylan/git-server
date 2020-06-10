@@ -1,0 +1,29 @@
+# Common functions for scripts
+
+out() { printf '%s\n'      "$@" >&2 ;}
+err() { printf 'err: %s\n' "$@" >&2 ;}
+die() { err "$@"; exit 1 ;}
+
+lsindex() {
+    # This is a functionized version of lsindex.
+    # Script version: https://gist.github.com/4d8a03d65b7744365aaef88f7877cd22
+    case "$1" in
+        '') set -- "$PWD" ;;
+        /*) ;;
+         *) set -- "$(cd "$1" || return 1; printf "$PWD")"
+     esac
+
+     unset parentdir
+     curdir="${PWD#$1}" title="index of ${curdir:=/}"
+
+     [ "$curdir" = / ] || { parentdir=${curdir%/*}; : "${parentdir:=/}" ;}
+     printf "<html><head><title>$title</title></head><body><h1>$title</h1><ul>"
+
+     [ "$parentdir" ] && printf "<li><a href=$parentdir>Parent Directory</a></li>"
+     for file in *; do
+         [ "$file" = index.html ] && continue
+         [ -d "$file" ] && file="$file/"
+         printf '<li><a href="%s">&s</a></li>' "$file" "$file"
+     done
+     printf '%s\n' "</ul></body></html"
+ }
