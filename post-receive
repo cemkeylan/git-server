@@ -70,7 +70,7 @@ ln -sf log.html index.html
 
         git archive \
             --format tar.gz \
-            --prefix "$repository-$tag" \
+            --prefix "$repository-$tag/" \
             -o "$tarball" \
             -- "$tag"
     done
