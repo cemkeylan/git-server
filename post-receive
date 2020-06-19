@@ -31,9 +31,18 @@ done < mirrors
     printf '%s\n' "$BASE_URL/$repo"    > url
 }
 
+# Make sure we export the current repository.
+# No, we don't want to run the 'export' command.
+# shellcheck disable=2238
+:> export
+
 # Create the stagit structure
 mkdir -p "$STAGIT_DIR/$repository"
-stagit-index "$REPO_DIR"/* > "$STAGIT_DIR/index.html"
+
+# Generate the index for every exported repository
+set --
+for repo in "$REPO_DIR/"*/export; do set -- "$@" "${repo%/*}"; done
+stagit-index "$@" > "$STAGIT_DIR/index.html"
 
 # Install style files
 [ "$CSS" ]     && install -Dm644 "$CSS"     "$STAGIT_DIR/style.css"
