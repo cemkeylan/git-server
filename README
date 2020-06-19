@@ -64,6 +64,7 @@ behaves. These files are as follows.
              | git@gitlab.com:user/awesome.git                            |
              +------------------------------------------------------------+
 
+
 - owner   :: Unless this file exists, the script will create its own as defined
              by the configuration.
 
@@ -71,6 +72,15 @@ behaves. These files are as follows.
              by the configuration.
 
 
+dependencies
+--------------------------------------------------------------------------------
+
+These hooks obviously depend on
+- git
+- stagit[2]
+
+
 references
 --------------------------------------------------------------------------------
 [1]: https://github.com/cemkeylan/stagitbuild
+[2]: https://codemadness.org/git/stagit
