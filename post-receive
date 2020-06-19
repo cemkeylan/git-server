@@ -80,7 +80,7 @@ ln -sf log.html index.html
                 -- "$tag"
         done
     for dir in archive "archive/$repository"; do (
-        cd "$STAGIT_DIR/$dir"
+        cd "$STAGIT_DIR/$dir" || exit 1
         lsindex "$STAGIT_DIR" > index.html
     ) done
 }
