@@ -1,25 +1,23 @@
 #!/bin/sh
 # shellcheck source=./config.def
 
-# A post-receive hook to form stagit pages,
-# creating tarballs, reinitializing stagit-index.
+# A post-receive hook to form stagit pages, creating tarballs, reinitializing
+# stagit-index.
 #
-# This script can be run for each repository, without
-# pushing, by going to the repository directory and
-# running 'hooks/post-receive'.
+# This script can be run for each repository, without pushing, by going to the
+# repository directory and running 'hooks/post-receive'.
 
 # Parse the configuration file
 hooksdir=$(readlink -f "$0") hooksdir=${hooksdir%/*}
 . "$hooksdir/config"
 . "$hooksdir/lib"
 
-# Store the repository name in a variable. We strip
-# the directory names and '.git' here.
+# Store the repository name in a variable. We strip the directory names and
+# '.git' here.
 repository=${PWD##*/} repository=${repository%.git}
 repository_path=${PWD}
 
-# Push to mirrors if a 'mirrors' file exists on the
-# base directory.
+# Push to mirrors if a 'mirrors' file exists on the base directory.
 [ -f mirrors ] && while read -r mirror; do
     git push --mirror "$mirror"
 done < mirrors
@@ -28,8 +26,8 @@ done < mirrors
 [ -f owner ] || printf '%s\n' "$OWNER" > owner
 [ -f url   ] || printf '%s\n' "$BASE_URL/$repository" > url
 
-# Make sure we export the current repository.
-# No, we don't want to run the 'export' command.
+# Make sure we export the current repository. No, we don't want to run the
+# 'export' command.
 # shellcheck disable=2238
 :> export
 
@@ -49,8 +47,8 @@ stagit-index "$@" > "$STAGIT_DIR/index.html"
 (
 cd "$STAGIT_DIR/$repository" || return 1
 
-# We create a cache to the .cache file so log creation
-# is faster on larger repositories.
+# We create a cache to the .cache file so log creation is faster on larger
+# repositories.
 stagit -c .cache "$repository_path"
 
 for file in style.css logo.png favicon.png; do
