@@ -1,0 +1,30 @@
+#!/bin/sh -e
+# Create a repository
+#
+# shellcheck disable=1090
+
+case "$1" in --help|-h|'')
+    printf '%s\n' "usage: ${0##*/} [repo] [description] [file...]"
+    exit 0
+esac
+
+# Source the configuration and library
+. "${GIT_CONFDIR:?}/config"
+. "$GIT_CONFDIR/lib"
+
+mkdir -p "$REPO_DIR/$1.git"
+
+cd "$REPO_DIR/$1.git" || exit 1
+git --bare init
+
+# Link the post-receive script to hooks
+ln -sf "$GIT_CONFDIR/post-receive" hooks/post-receive
+
+printf '%s\n' "$2" > description
+
+# Create empty files such as 'archive', 'raw' so that we can make use
+# of it on the post-receive hook.
+[ "$3" ] && {
+    shift 2
+    for file; do :>> "$file"; done
+}
