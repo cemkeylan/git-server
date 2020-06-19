@@ -1,8 +1,8 @@
 ## CONFIGURATION ##
+################################################################################
 
-############################################################
 # GENERAL
-############################################################
+################################################################################
 # Default url name to be used as the base of the clone URL
 # Example: git://git.example.com
 BASE_URL=
@@ -14,32 +14,28 @@ OWNER=
 # Example: /home/git/repositories
 REPO_DIR=
 
-############################################################
 # STAGIT
-############################################################
-# Path to site directory. This is where your log and indexes
-# will be placed.
+################################################################################
+# Path to site directory. This is where your log and indexes will be placed.
+# Example: /home/user-data/git.example.com
 STAGIT_DIR=
 
-# Path to your css/icons, these will be placed to every stagit
-# page directory, so they will be linked to every directory.
+# Path to your css/icons, these will be added to your base site and will be
+# linked to every directory.
 CSS=
 FAVICON=
 LOGO=
 
 
-############################################################
 # PLAIN FILES
-############################################################
-# Create tarballs of every repository. By default, the script
-# creates tarballs if the repository contains a file named
-# 'archive'. If this option is set to 1, it will create these
-# tarballs regardless of the file. These tarballs are created
-# for each tag and each branch.
+################################################################################
+# Create tarballs of every repository. By default, the script creates tarballs
+# if the repository contains a file named 'archive'. If this option is set to 1,
+# it will create these tarballs regardless of the file. These tarballs are
+# created for each tag and each branch.
 ARCHIVE_ALL=
 
-# If this option is set to 1, this will output raw files for
-# every repository instead of looking for a file named 'raw',
-# similar to the previous option. 'raw' creates a raw directory
-# for every branch.
+# If this option is set to 1, this will output raw files for every repository
+# instead of looking for a file named 'raw', similar to the previous option.
+# 'raw' creates a raw directory for every branch.
 RAW_ALL=
