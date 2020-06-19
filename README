@@ -4,7 +4,7 @@ git server stuff
 Scripts and hooks I use to create my stagit page among with other stuff such as
 tarball creation and raw file serving.
 
-This is the _incarnation_ of stagitbuild, which was one of my first shell
+This is the _incarnation_ of stagitbuild[1], which was one of my first shell
 programs (I put it under VCS months after its creation). It rebuilt the whole
 website on a git push (with tarball creation) which took up to 10 whole seconds.
 It had terrible code quality and I tried fixing it, but it obviously needed a
@@ -69,3 +69,8 @@ behaves. These files are as follows.
 
 - url     :: Unless this file exists, the script will create its own as defined
              by the configuration.
+
+
+references
+--------------------------------------------------------------------------------
+[1]: https://github.com/cemkeylan/stagitbuild
