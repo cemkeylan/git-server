@@ -68,10 +68,11 @@ ln -sf log.html index.html
     mkdir -p "$STAGIT_DIR/archive/$repository"
     git show-ref --tags --heads |
         while read -r _ ref; do
-            case "$ref" in refs/heads/*) recreate=1 ;; *) unset recreate; esac
             tag=${ref#refs/*/}
             tarball="$STAGIT_DIR/archive/$repository/$repository-$tag.tar.gz"
-            [ "$recreate" != 1 ] && [ -f "$tarball" ] && continue
+
+            # Unless we are working with a branch, skip recreation of a tarball.
+            [ "${ref##refs/heads/*}" ] && [ -f "$tarball" ] && continue
 
             git archive \
                 --format tar.gz \
