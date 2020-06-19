@@ -1,1 +1,71 @@
-GIT HOOKS
+git server stuff
+--------------------------------------------------------------------------------
+
+Scripts and hooks I use to create my stagit page among with other stuff such as
+tarball creation and raw file serving.
+
+This is the _incarnation_ of stagitbuild, which was one of my first shell
+programs (I put it under VCS months after its creation). It rebuilt the whole
+website on a git push (with tarball creation) which took up to 10 whole seconds.
+It had terrible code quality and I tried fixing it, but it obviously needed a
+rewrite.
+
+
+setting up
+--------------------------------------------------------------------------------
+
+Using the scripts (not the hooks) require the '$GIT_CONFDIR' variable to be set
+to this directory.
+
+You will need to copy the default configuration and edit it to set your website
+directory along with other configuration options, which are briefly explained
+in the file itself.
+
+  +--------------------------------------------------------------------------+
+  | $ cp config.def config                                                   |
+  | $ vi config                                                              |
+  +--------------------------------------------------------------------------+
+
+If you want to manage an existing repository under this hook, you can do it by
+linking its post-receive hook
+
+  +--------------------------------------------------------------------------+
+  | $ ln -sf $PWD/post-receive /path/to/repo/hooks/post-receive              |
+  +--------------------------------------------------------------------------+
+
+You can also use the `mkrepo` script in order to create a new repository that is
+meant to be managed by this program. The following example will create a
+repository named 'awesome-repo' with the description 'This is descriptive'. It
+will then create empty files named 'raw' and 'archive'.
+
+  +--------------------------------------------------------------------------+
+  | # Syntax: mkrepo [repo] [description] [file...]                          |
+  | $ mkrepo awesome-repo "This is descriptive" raw archive                  |
+  +--------------------------------------------------------------------------+
+
+
+special files
+--------------------------------------------------------------------------------
+
+The post-receive hook looks for certain files which changes the way the script
+behaves. These files are as follows.
+
+- raw     :: If this file exists, the script will create raw files out of every
+             branch.
+
+- archive :: If this file exists, the script will create archives out of every
+             tag and every branch.
+
+- mirrors :: If this file exists, the script will mirror the repository to
+             every listed link. Example mirros file:
+
+             +------------------------------------------------------------+
+             | git@github.com:user/awesome-repo.git                       |
+             | git@gitlab.com:user/awesome.git                            |
+             +------------------------------------------------------------+
+
+- owner   :: Unless this file exists, the script will create its own as defined
+             by the configuration.
+
+- url     :: Unless this file exists, the script will create its own as defined
+             by the configuration.
