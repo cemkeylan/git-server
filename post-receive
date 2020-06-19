@@ -27,7 +27,7 @@ done < mirrors
 # Generate files parsed by 'stagit'.
 [ -f owner ] || printf '%s\n' "$OWNER" > owner
 [ -f url   ] || {
-    repo=$(realpath .); repo=${repo##*/}
+    repo=${PWD##*/}
     printf '%s\n' "$BASE_URL/$repo"    > url
 }
 
