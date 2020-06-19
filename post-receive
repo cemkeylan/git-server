@@ -69,21 +69,19 @@ ln -sf log.html index.html
 # Create archives and plain raw files
 [ "$ARCHIVE_ALL" = 1 ] || [ -f archive ] && {
     mkdir -p "$STAGIT_DIR/archive/$repository"
-    for file in $(git show-ref --tags --heads); do
-        file=${file#* }
+    git show-ref --tags --heads |
+        while read -r _ ref; do
+            case "$ref" in refs/heads/*) recreate=1 ;; *) unset recreate; esac
+            tag=${file#refs/*/}
+            tarball="$STAGIT_DIR/archive/$repository/$repository-$tag.tar.gz"
+            [ "$recreate" != 1 ] && [ -f "$tarball" ] && continue
 
-        # Skip tarball recreation for tags, but always recreate branches.
-        case "$file" in refs/heads/*) recreate=1 ;; *) unset recreate; esac
-        tag=${file#refs/*/}
-        tarball="$STAGIT_DIR/archive/$repository/$repository-$tag.tar.gz"
-        [ "$recreate" != 1 ] && [ -f "$tarball" ] && continue
-
-        git archive \
-            --format tar.gz \
-            --prefix "$repository-$tag/" \
-            -o "$tarball" \
-            -- "$tag"
-    done
+            git archive \
+                --format tar.gz \
+                --prefix "$repository-$tag/" \
+                -o "$tarball" \
+                -- "$tag"
+        done
     for dir in archive "archive/$repository"; do (
         cd "$STAGIT_DIR/$dir"
         lsindex "$STAGIT_DIR" > index.html
@@ -91,10 +89,11 @@ ln -sf log.html index.html
 }
 
 [ "$RAW_ALL" = 1 ] || [ -f raw ] && {
-    for file in $(git show-ref --heads); do
-        branch=${file##*/}
-        mkdir -p "$STAGIT_DIR/raw/$repository/$branch"
-        git archive --format tar -- "$branch" |
-            (cd "$STAGIT_DIR/raw/$repository/$branch" || return 1 ; tar xf -)
-    done
+    git show-ref --heads |
+        while read -r _ ref; do
+            branch=${ref##*/}
+            mkdir -p "$STAGIT_DIR/raw/$repository/$branch"
+            git archive --format tar -- "$branch" |
+                (cd "$STAGIT_DIR/raw/$repository/$branch" || return 1 ; tar xf -)
+        done
 }
