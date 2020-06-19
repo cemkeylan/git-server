@@ -90,8 +90,26 @@ ln -sf log.html index.html
     git show-ref --heads |
         while read -r _ ref; do
             branch=${ref##*/}
-            mkdir -p "$STAGIT_DIR/raw/$repository/$branch"
+            branchdir="$STAGIT_DIR/raw/$repository/$branch"
+
+            # Make sure we clean up the directory by removing it completely and
+            # recreating it completely.
+            rm -rf "$branchdir"; mkdir -p "$branchdir"
+
+            # We create and extract a tar archive. I don't know a better way than
+            # this, so suggestions are welcome.
             git archive --format tar -- "$branch" |
-                (cd "$STAGIT_DIR/raw/$repository/$branch" || return 1 ; tar xf -)
+                (cd "$branchdir" || return 1 ; tar xf -)
+
+            # Create an index for all directories in the repository
+            find "$branchdir" -type d | while read -r dir; do (
+                cd "$dir" || exit 1
+                lsindex "$STAGIT_DIR" > index.html
+            ) done
+
         done
+    for dir in raw "raw/$repository"; do (
+        cd "$STAGIT_DIR/$dir" || exit 1
+        lsindex "$STAGIT_DIR" > index.html
+    ) done
 }
