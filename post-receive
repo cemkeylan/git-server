@@ -26,10 +26,7 @@ done < mirrors
 
 # Generate files parsed by 'stagit'.
 [ -f owner ] || printf '%s\n' "$OWNER" > owner
-[ -f url   ] || {
-    repo=${PWD##*/}
-    printf '%s\n' "$BASE_URL/$repo"    > url
-}
+[ -f url   ] || printf '%s\n' "$BASE_URL/$repository" > url
 
 # Make sure we export the current repository.
 # No, we don't want to run the 'export' command.
