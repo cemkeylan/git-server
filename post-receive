@@ -26,17 +26,15 @@ done < mirrors
 [ -f owner ] || printf '%s\n' "$OWNER" > owner
 [ -f url   ] || printf '%s\n' "$BASE_URL/$repository" > url
 
-# Make sure we export the current repository. No, we don't want to run the
-# 'export' command.
-# shellcheck disable=2238
-:> export
+# Make sure we export the current repository.
+:> git-daemon-export-ok
 
 # Create the stagit structure
 mkdir -p "$STAGIT_DIR/$repository"
 
 # Generate the index for every exported repository
 set --
-for repo in "$REPO_DIR/"*/export; do set -- "$@" "${repo%/*}"; done
+for repo in "$REPO_DIR/"*/git-daemon-export-ok; do set -- "$@" "${repo%/*}"; done
 stagit-index "$@" > "$STAGIT_DIR/index.html"
 
 # Install style files
