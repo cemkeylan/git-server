@@ -29,7 +29,8 @@ done < mirrors
 # Make sure we export the current repository.
 :> git-daemon-export-ok
 
-# Create the stagit structure
+# Recreate the stagit structure
+rm -rf "${STAGIT_DIR:?}/$repository"
 mkdir -p "$STAGIT_DIR/$repository"
 
 # Generate the index for every exported repository
