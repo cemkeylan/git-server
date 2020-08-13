@@ -55,7 +55,7 @@ done
 
 # Link index.html to log.html so users don't have to
 # type the whole file out.
-ln -sf README*.html index.html
+ln -sf file/README*.html index.html
 )
 
 
