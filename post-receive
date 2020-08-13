@@ -35,7 +35,10 @@ mkdir -p "$STAGIT_DIR/$repository"
 # Generate the index for every exported repository
 set --
 for repo in "$REPO_DIR/"*/git-daemon-export-ok; do set -- "$@" "${repo%/*}"; done
-stagit-index "$@" > "$STAGIT_DIR/index.html"
+stagit-index "$@" |
+    sed 's|log\.html|index.html|' |
+    sed "s|<title>Repositories</title>|<title>${TITLE:-Repositories}</title>|" |
+    sed "s|\"desc\">Repositories|\"desc\">${TITLE:-Repositories}|" > "$STAGIT_DIR/index.html"
 
 # Install style files
 [ "$CSS" ]     && install -Dm644 "$CSS"     "$STAGIT_DIR/style.css"

@@ -26,6 +26,9 @@ CSS=
 FAVICON=
 LOGO=
 
+# Title of your stagit page. This will be displayed on the main index.html file.
+TITLE=
+
 
 # PLAIN FILES
 ################################################################################
