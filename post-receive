@@ -63,7 +63,7 @@ rm -f index.html
 for file in file/*.html; do
     [ -f "$file" ] || continue
     case "${file##*/}" in README*)
-        ln -sf "$file" index.html
+        sed 's|"../|"|' "$file" > index.html
     esac
 done
 [ -f index.html ] || ln -sf log.html index.html
