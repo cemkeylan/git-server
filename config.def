@@ -29,6 +29,9 @@ LOGO=
 # Title of your stagit page. This will be displayed on the main index.html file.
 TITLE=
 
+# External URL. This will be added to the image on the main index.html file.
+EXTERN_URL=
+
 
 # PLAIN FILES
 ################################################################################
