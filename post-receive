@@ -40,9 +40,11 @@ stagit-index "$@" |
     sed 's|log\.html|index.html|' |
     sed "s|<title>Repositories</title>|<title>${TITLE:-Repositories}</title>|" |
     sed "s|\"desc\">Repositories|\"desc\">${TITLE:-Repositories}|" |
-    {
-        [ "$EXTERN_URL" ] && sed "s|<img|<a href=\"$EXTERN_URL\"><img|;s|</td>\$|</a></td>|"
-    } > "$STAGIT_DIR/index.html"
+    if [ "$EXTERN_URL" ]; then
+        sed "s|<img|<a href=\"$EXTERN_URL\"><img|;s|</td>\$|</a></td>|"
+    else
+        cat
+    fi > "$STAGIT_DIR/index.html"
 
 # Install style files
 [ "$CSS" ]     && install -Dm644 "$CSS"     "$STAGIT_DIR/style.css"
