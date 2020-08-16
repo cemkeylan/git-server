@@ -65,12 +65,12 @@ done
 # If a README file exists, link the index to the README. If it doesn't, link the
 # index to the repository log.
 rm -f index.html
-for file in file/*.html; do
-    [ -f "$file" ] || continue
-    case "${file##*/}" in README*)
-        sed 's|"../|"|' "$file" > index.html
-    esac
-done
+# for file in file/*.html; do
+#     [ -f "$file" ] || continue
+#     case "${file##*/}" in README*)
+#         sed 's|"../|"|' "$file" > index.html
+#     esac
+# done
 [ -f index.html ] || ln -sf log.html index.html
 )
 
