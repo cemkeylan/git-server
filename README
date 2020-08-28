@@ -71,6 +71,9 @@ behaves. These files are as follows.
 - url     :: Unless this file exists, the script will create its own as defined
              by the configuration.
 
+- hooks/post-receive.extra
+  If this file exists, post-receive hook will source it after it is done.
+
 
 dependencies
 --------------------------------------------------------------------------------
