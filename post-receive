@@ -125,3 +125,6 @@ rm -f index.html
         lsindex "$STAGIT_DIR" > index.html
     ) done
 }
+
+# If a repository has an individual hook named post-receive.extra, run it.
+[ -f hooks/post-receive.extra ] && . hooks/post-receive.extra
